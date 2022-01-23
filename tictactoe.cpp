@@ -1,11 +1,11 @@
 #include <iostream>
 #include <string>
 #include <cctype>
-#include <algorithm>
+#include <algorithm>		//for transform
 #include <random>
 #include <chrono>
 #include <stdlib.h>
-
+#include <unistd.h>         // for usleep();
 
 //-----------------------------------------------------------------
 
@@ -36,7 +36,7 @@ struct TGAME
 	const size_t size{3}; //3x3
 	TCell human{CROSS};
 	TCell computer{ZERO};
-	size_t turn{ 0 }; //четные человек, нечетные компьютер
+	size_t turn{ 0 }; // even man, uneven computer
 	TProgress progress{IN_PROGRESS};
 };
 
@@ -46,27 +46,71 @@ struct TGAME
 
 void instructions()
 {
-	std::cout << "Welcome to the ultimate man-machine showdown! Tic-Tac-Toe \n";
-	std::cout << "Where human brain is pit against silicon processor! \n\n";
-	std::cout << "Prepare yourself, human. The battle is about to begin.\n\n";
+	std::cout << "        ========== Tic-Tac-Toe ========== \n\n\n";
+	std::cout << "    Welcome to the ultimate man-machine showdown \n";
+	std::cout << " --where human brain is pit against silicon processor. \n\n";
+	std::cout << " Prepare yourself, human. The battle is about to begin.\n\n\n";
 }
 
 void askNamePlayer()
 {
+	std::cout << "SUPERCOMPYTER:";
+	std::string message1{" Hello, human. A SUPERCOMPYTER is talking to you!!!"};
+	for (int i = 0; i < message1.size(); ++i)
+	{
+		std::cout << message1[i] << std::flush;
+		usleep(50000); 
+	}
+	std::cout << "\n";
+
+	std::string message2{"Take the fight or leave!!!"};
+	for (int i = 0; i < message2.size(); ++i)
+	{
+		std::cout << message2[i] << std::flush;
+		usleep(50000); 
+	}
+	//std::cout << "\n";
+
+	std::string message3{" Tell me your name human!?"};
+	for (int i = 0; i < message3.size(); ++i)
+	{
+		std::cout << message3[i] << std::flush;
+		usleep(50000); 
+	}
+	std::cout << "\n";
+
+	std::cout << "Human: ";
 	std::string name;
-	std::cout << "<< Hello, human. A SUPERCOMPYTER is talking to you. >> \n";
-	std::cout << "<< Take the fight or leave!!! >> \n";
-	std::cout << "<< Tell me your name human!? >> \n";
 	std::cin >> name;
 	std::transform(name.begin(), name.end(), name.begin(), toupper);
-	std::cout << '\n' << "<< HA-HA-HA " << (name) 
-	<< "!!! " << "Great! So, will we begin!!! >> \n";
+	
+	std::cout << "SUPERCOMPYTER:";
+	std::string message4{" HA-HA-HA, "};
+	for (int i = 0; i < message4.size(); ++i)
+	{
+		std::cout << message4[i] << std::flush;
+		usleep(50000); 
+	}
+
+	for (int i = 0; i < name.size(); ++i)
+	{
+		std::cout << name[i] << std::flush;
+		usleep(50000); 
+	}
+
+	std::string message5{". Great! So, will we begin!!!"};
+	for (int i = 0; i < message5.size(); ++i)
+	{
+		std::cout << message5[i] << std::flush;
+		usleep(50000); 
+	}
+	std::cout << "\n\n";
 }
 
 //-----------------------------------------------------------------
 
 
-void clearScr() //очитска экрана
+void clearScr() //clearing the screen
 {
 	std::cout << "\x1B[2J\x1B[H";
 }
@@ -114,7 +158,6 @@ void initGAME(TGAME &g)
 	}
 }
 
-
 void deinitGAME(TGAME &g)
 {
 
@@ -125,8 +168,6 @@ void deinitGAME(TGAME &g)
 	delete [] g.ppField;
 	g.ppField = nullptr;
 }
-
-
 
 void printGame(const TGAME &g) 
 {
@@ -151,11 +192,9 @@ void printGame(const TGAME &g)
 	std::cout << '\n';
 }
 
-
-
 TProgress getWon(const TGAME &g)
 {	
-	//выйгрыш в строках
+	//winning in lines
 	for (size_t y = 0; y < g.size; ++y)
 	{
 		if ((g.ppField[y][0]) == (g.ppField[y][1]) && (g.ppField[y][0]) == (g.ppField[y][2]))
@@ -172,7 +211,7 @@ TProgress getWon(const TGAME &g)
 		}
 	}
 
-	//выйгрыш в столцах
+	//winning in columns
 	for (size_t x = 0; x < g.size; ++x)
 	{
 		if ((g.ppField[0][x]) == (g.ppField[1][x]) && (g.ppField[0][x]) == (g.ppField[2][x]))
@@ -189,7 +228,7 @@ TProgress getWon(const TGAME &g)
 		}
 	}
 
-	//выйгрыш диагонали
+	//winning diagonals
 	if ((g.ppField[0][0]) == (g.ppField[1][1]) && (g.ppField[0][0]) == (g.ppField[2][2]))
 	{
 		if (g.ppField[0][0] == g.human)
@@ -218,7 +257,7 @@ TProgress getWon(const TGAME &g)
 	}
 
 
-	//ничья
+	//DRAW
 
 	bool draw{true};
 
@@ -245,7 +284,6 @@ TProgress getWon(const TGAME &g)
 	return IN_PROGRESS;
 }
 
-
 TCoordinates getHumanCoord(const TGAME &g)
 {
 	TCoordinates c;	
@@ -260,7 +298,6 @@ TCoordinates getHumanCoord(const TGAME &g)
 	} while (c.x > 2 || c.y > 2 || g.ppField[c.y][c.x] != EMPTY);
 	return c;
 }
-
 
 TCoordinates getComputerCoord(TGAME &g)
 {
@@ -303,7 +340,7 @@ TCoordinates getComputerCoord(TGAME &g)
 		}
 	}
 
-	//3 - ходы по приоритетам + рандом по ним
+	//3 moves by priority + random by them
 	
 	//цент
 	if (g.ppField[1][1] == EMPTY)
@@ -311,7 +348,7 @@ TCoordinates getComputerCoord(TGAME &g)
 		return {1, 1};
 	}
 	
-	//углы
+	//corners
 	TCoordinates buf[4];
 	size_t num{ 0 };
 	if (g.ppField[0][0] == EMPTY)
@@ -340,7 +377,7 @@ TCoordinates getComputerCoord(TGAME &g)
 		return buf[index];
 	}	
 
-	//не углы
+	//not corners
 	num = 0;
 	if (g.ppField[0][1] == EMPTY)
 	{
@@ -374,21 +411,48 @@ TCoordinates getComputerCoord(TGAME &g)
 void congrats(const TGAME &g)
 {
 	if (g.progress == WON_HUMAN)
-		std::cout << "Human won!!! =) \n" << std::endl;
+	{
+		std::cout << "SUPERCOMPYTER: ";
+		std::string s1{"You WON!?! "};
+
+		for (int i = 0; i < s1.size(); ++i)
+		{
+			std::cout << s1[i] << std::flush;
+			usleep(50000); 
+		}
+		std::cout << "\n";
+	}
 		
 	else if (g.progress == WON_COMPUTER)
-		std::cout << "SUPERCOMPYTER won!!! =/ \n" << std::endl;
+	{
+		std::cout << "SUPERCOMPYTER: ";
+		std::string s2{"I WON!!! "};
+
+		for (int i = 0; i < s2.size(); ++i)
+		{
+			std::cout << s2[i] << std::flush;
+			usleep(50000); 
+		}
+		std::cout << "\n";
+	}
 		
 	else if (g.progress == DRAW)
-		std::cout << "DRAW =( \n" << std::endl;
+	{
+		std::cout << "SUPERCOMPYTER: ";
+		std::string s3{"DRAW!!! "};
 
-	std::cout << "The game Tic-Tac-Toe made by Brel \n\n";
+		for (int i = 0; i < s3.size(); ++i)
+		{
+			std::cout << s3[i] << std::flush;
+			usleep(50000); 
+		}
+		std::cout << "\n";
+	}
 }
 
+void replayGame();
 
-//-----------------------------------------------------------------
-
-int main(int argc, char const *argv[])
+void tictactoe()
 {
 	clearScr();
 	instructions();
@@ -403,13 +467,13 @@ int main(int argc, char const *argv[])
 	do {
 		if (g.turn % 2 == 0)
 		{
-			//ходит человек
+			// human
 			TCoordinates c = getHumanCoord(g);
 			g.ppField[c.y][c.x] = g.human;
 		}
 		else
 		{
-			//ходит компьютер
+			// computer
 			TCoordinates c = getComputerCoord(g);
 			g.ppField[c.y][c.x] = g.computer;
 		}
@@ -422,11 +486,48 @@ int main(int argc, char const *argv[])
 	} while (g.progress == IN_PROGRESS);
 
 	congrats(g);
+
+	replayGame();
+
 	deinitGAME(g);
-	
 }
 
+void replayGame()
+{
+	char yesNo;
+	
+	std::cout << "SUPERCOMPYTER: ";	
+	std::string s1{"Do you want to repeat the game? "};
+		for (int i = 0; i < s1.size(); ++i)
+		{
+			std::cout << s1[i] << std::flush;
+			usleep(50000); 
+		}
+	
+	std::string s2{"Enter YES('y') or NO('n')"};
+		for (int i = 0; i < s2.size(); ++i)
+		{
+			std::cout << s2[i] << std::flush;
+			usleep(50000); 
+		}
+	std::cout << "\n";
 
+	std::cout << "Human: ";
+	std::cin >> yesNo;
+
+	if (yesNo != 'n')	
+	return  tictactoe(); 
+}
+
+//-----------------------------------------------------------------
+
+int main(int argc, char const *argv[])
+{
+	tictactoe();
+	
+	std::cout << "\n";
+	std::cout << "The game Tic-Tac-Toe made by e.brel \n\n";
+}
 
 //-----------------------------------------------------------------
 
